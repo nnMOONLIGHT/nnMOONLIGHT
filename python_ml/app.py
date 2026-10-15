@@ -1,4 +1,4 @@
-# FastAPI wrapper that exposes the trained MLP via /predict
+
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 from typing import Dict, List
@@ -52,7 +52,7 @@ def load_web_model():
     elif os.path.exists(WEIGHTS_PATH):
         with open(WEIGHTS_PATH, "r", encoding="utf-8") as f:
             weights = json.load(f)
-        # assume architecture is the repository default
+     
         from styles import NUM_FEATURES as NF, NUM_CLASSES as NC
         net = MLP.from_json(weights, NF, 32, 16, NC)
         mu = np.zeros(NF)
@@ -81,9 +81,9 @@ async def predict(file: UploadFile = File(...)):
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid image file")
 
-    # extract features using the same code as training
+  
     feats = extract_features(im)
-    # normalise
+    
     Xn = (feats - _mu) / _sigma
     Xn = Xn.reshape(1, -1)
 
