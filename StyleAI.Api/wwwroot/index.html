@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StyleAI — Demo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Персональный стилист</h1>
+    <p class="lead">Загрузите фото — система анализирует визуальный стиль и показывает рекомендации.</p>
+
+    <form id="uploadForm">
+      <label class="file-label">
+        <input id="fileInput" type="file" name="file" accept="image/*" />
+      </label>
+      <button id="submitBtn" type="submit" disabled>Анализировать</button>
+    </form>
+
+    <section id="result" class="hidden">
+      <h2 id="resultTitle">Результат анализа</h2>
+      <div id="card" class="card">
+        <div class="palette" id="palette"></div>
+        <div class="details">
+          <div class="style-name" id="styleName"></div>
+          <div class="confidence" id="confidence"></div>
+          <div class="summary" id="summary"></div>
+          <div class="clothing" id="clothing"></div>
+          <div class="hobbies" id="hobbies"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="message" class="message"></div>
+
+    <footer>
+      <small>Демо‑интерфейс. Для тестирования локально запустите API и ML‑сервис (см. README).</small>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
