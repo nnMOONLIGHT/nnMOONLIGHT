@@ -22,3 +22,4 @@ public class MlController : ControllerBase
         return Ok(pred);
     }
 }
+//одолжила ML для подключения
