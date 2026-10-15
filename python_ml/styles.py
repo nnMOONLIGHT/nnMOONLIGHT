@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Style metadata and feature names used by the training / inference code.
 This is a compact reconstruction so the Python ML service can run standalone
@@ -18,7 +18,7 @@ STYLES = [
 
 NUM_CLASSES = len(STYLES)
 
-# Feature names must match the order produced by features.extract_features()
+
 FEATURE_NAMES = [
     "r_mean", "g_mean", "b_mean",
     "h_mean", "s_mean", "v_mean",
