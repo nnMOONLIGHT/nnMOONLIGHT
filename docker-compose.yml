@@ -33,6 +33,5 @@ services:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
     restart: on-failure
 
-# For production consider a named volume for sqlite DB
 volumes:
   styleai_db:
