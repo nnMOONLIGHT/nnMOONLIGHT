@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  python_ml:
+    build:
+      context: .
+      dockerfile: python_ml/Dockerfile
+    image: nnmoonlight_styleai_python_ml
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python_ml:/app:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: StyleAI.Api/Dockerfile
+    image: nnmoonlight_styleai_api
+    depends_on:
+      python_ml:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./StyleAI.Api:/app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    restart: on-failure
+
+# For production consider a named volume for sqlite DB
+volumes:
+  styleai_db:

@@ -7,6 +7,9 @@ using StyleAI.Infrastructure.Services;
 using StyleAI.Core.Interfaces;
 using StyleAI.Core.Data;
 using System.IO;
+using StyleAI.Core.Entities;
+using StyleAI.Core.Enums;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,11 +45,40 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// migrate db
+// migrate db; if migrations are not present fall back to EnsureCreated for quick start
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        db.Database.Migrate();
+    }
+    catch
+    {
+        // migrations may not be added in the repo; ensure database is created for quick testing
+        db.Database.EnsureCreated();
+    }
+
+    // Seed a default manager user if none exists (email: admin@local / password: password)
+    try
+    {
+        var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        if (!db.Users.Any(u => u.Email == "admin@local"))
+        {
+            db.Users.Add(new User
+            {
+                Email = "admin@local",
+                PasswordHash = hasher.Hash("password"),
+                Role = UserRole.Manager,
+                CreatedAt = DateTime.UtcNow
+            });
+            db.SaveChanges();
+        }
+    }
+    catch
+    {
+        // ignore seeding errors for now
+    }
 }
 
 if (app.Environment.IsDevelopment())
