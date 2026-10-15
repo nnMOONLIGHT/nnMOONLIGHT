@@ -1,17 +1,17 @@
-# Dockerfile for the Python ML microservice
+# для мл
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system deps
+# загрузка системного
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy sources
+# копирка
 COPY ./python_ml /app
 
-# Install pip deps
+# загрузка пипов
 RUN python -m pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
