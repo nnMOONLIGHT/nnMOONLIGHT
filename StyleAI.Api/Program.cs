@@ -13,29 +13,29 @@ using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// configuration
+// конфигурации
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-// DbContext - file-based sqlite in app folder
+
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "styleai.db");
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite($"Data Source={dbPath}"));
 
-// DI for core services
+//тоже
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
-// register domain services
+// регистр серверов
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<IStyleService, StyleService>();
 
-// Style catalog - point to the prebuilt styles JSON we added
+// каталог для джисончикабро
 var stylesJson = Path.Combine(builder.Environment.ContentRootPath, "python_ml", "styles.json");
 if (File.Exists(stylesJson))
 {
     builder.Services.AddSingleton<IStyleCatalog>(new StyleCatalog(stylesJson));
 }
 
-// HttpClient for Python ML microservice
+// Для контроллера мл
 var pythonBase = builder.Configuration["PythonMl:BaseUrl"] ?? "http://localhost:8000";
 builder.Services.AddHttpClient<IPythonMlClient, PythonMlClient>(c => c.BaseAddress = new Uri(pythonBase));
 
@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// migrate db; if migrations are not present fall back to EnsureCreated for quick start
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -55,11 +55,11 @@ using (var scope = app.Services.CreateScope())
     }
     catch
     {
-        // migrations may not be added in the repo; ensure database is created for quick testing
+        // миграции тестирования
         db.Database.EnsureCreated();
     }
 
-    // Seed a default manager user if none exists (email: admin@local / password: password)
+    // Для менеджера и его логина/почты
     try
     {
         var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch
     {
-        // ignore seeding errors for now
+        //игнорирование ошибок
     }
 }
 
@@ -92,3 +92,4 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+//Ошибки не ошибки
